@@ -1,28 +1,36 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import axiosInstance from '../instance';
 
 export default function useAxiosInterceptor() {
   const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
+    axiosInstance.get('/tokens/refresh').then(({ data }) => setAccessToken(data.accessToken));
+  }, []);
+
+  useEffect(() => {
     // Перехватчик запроса
-    axiosInstance.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const requestInterceptor = axiosInstance.interceptors.request.use((config) => {
+      if (!config.headers.Authorization) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
       return config;
     });
 
     // Перехватчик ответа
-    axiosInstance.interceptors.response.use(
+    const responseInterceptor = axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
         const { status } = error.response;
-        const { config } = error;
-        if (status === 403 && !config.sent) {
-          const { data } = await axiosInstance('/api/refresh');
-          setAccessToken(data);
-          config.sent = true;
-          config.headers.Authorization = `Bearer ${data}`;
-          return axiosInstance(config);
+        const prevRequest = error.config;
+        if (status === 403 && !prevRequest.sent) {
+          const response = await axios('/api/tokens/refresh');
+          const newToken = response.data.accessToken;
+          setAccessToken(newToken);
+          prevRequest.sent = true;
+          prevRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axiosInstance(prevRequest);
         }
         return Promise.reject(error);
       },
@@ -30,8 +38,8 @@ export default function useAxiosInterceptor() {
 
     // Отключение старых перехватчиков перед подключением новых
     return () => {
-      axiosInstance.interceptors.request.eject(accessToken);
-      axiosInstance.interceptors.response.eject(accessToken);
+      axiosInstance.interceptors.request.eject(requestInterceptor);
+      axiosInstance.interceptors.response.eject(responseInterceptor);
     };
   }, [accessToken]);
 }

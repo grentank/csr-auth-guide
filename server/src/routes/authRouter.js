@@ -13,24 +13,24 @@ authRouter.post('/signup', async (req, res) => {
 
     if (!name || !email || !password) return res.status(401).send({ message: 'Fill all fields' });
 
-    const [user, created] = await User.findOrCreate({
+    const [foundUser, created] = await User.findOrCreate({
       where: { email },
-      defaults: { name, hashpass: await bcrypt.hash(password, 10) },
+      defaults: { name, password: await bcrypt.hash(password, 10) },
     });
 
     if (!created) {
       return res.status(403).json({ message: 'User already exists' });
     }
 
-    const plainUser = user.get();
-    delete plainUser.hashpass;
+    const user = foundUser.get();
+    delete user.password;
 
-    const { accessToken, refreshToken } = generateTokens({ user: plainUser });
+    const { accessToken, refreshToken } = generateTokens({ user });
 
     return res
       .cookie('refreshToken', refreshToken, cookiesConfig.refresh)
       .status(200)
-      .json({ accessToken, user: plainUser });
+      .json({ accessToken, user });
   } catch (e) {
     console.log(e);
     return res.sendStatus(500);
@@ -48,7 +48,7 @@ authRouter.post('/login', async (req, res) => {
 
     if (!user) return res.status(401).json({ message: 'User not found' });
 
-    const valid = await bcrypt.compare(password, user.hashpass);
+    const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) return res.status(401).json({ message: 'Incorrect password' });
 

@@ -6,7 +6,7 @@ const apiCharRouter = express.Router();
 
 apiCharRouter
   .route('/')
-  .get(async (req, res) => {
+  .get(verifyAccessToken, async (req, res) => {
     const chars = await Post.findAll({
       order: [['id', 'DESC']],
       include: User,
@@ -47,7 +47,7 @@ apiCharRouter
       res.status(500).json({ message: 'ERROR EDITING CHAR' });
     }
   })
-  .get(async (req, res) => {
+  .get(verifyAccessToken, async (req, res) => {
     const char = await Post.findOne({ where: { id: req.params.id }, include: User });
     res.json(char);
   });

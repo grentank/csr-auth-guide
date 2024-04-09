@@ -22,6 +22,6 @@ app.use(express.json());
 
 app.use('/api/tokens', tokensRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/characters', charRouter);
+app.use('/api/posts', charRouter);
 
 app.listen(PORT, () => console.log(`Server has started on PORT ${PORT}`));
