@@ -1,15 +1,18 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import axios from 'axios';
-import App from '../App';
-
-axios.create();
+import HomePage from '../components/pages/HomePage';
+import SignupPage from '../components/pages/SignupPage';
+import AccountPage from '../components/pages/AccountPage';
+import Layout from '../Layout';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />,
-    children: [],
+    element: <Layout />,
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: '/signup', element: <SignupPage /> },
+      { path: '/account', element: <AccountPage /> },
+    ],
   },
 ]);
 

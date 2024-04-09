@@ -1,19 +1,9 @@
 import React from 'react';
-import { Container, Row } from 'react-bootstrap';
-import { Outlet } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
+import router from './router/router';
 
 function App() {
-  return (
-    <Container>
-      <Row>
-        <h1>Hello</h1>
-      </Row>
-      <div>asddasdas</div>
-      <div>
-        <Outlet />
-      </div>
-    </Container>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

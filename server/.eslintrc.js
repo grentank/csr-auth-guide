@@ -8,5 +8,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
-  rules: {},
+  rules: {
+    'import/no-extraneous-dependencies': 'off',
+  },
 };

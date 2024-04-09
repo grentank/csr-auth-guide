@@ -12,6 +12,6 @@
     1. `npm i -D react-router-dom axios`
     2. 
 6. В папке server
-    1. `npm i express morgan sequelize sequelize-cli pg pg-hstore dotenv`
+    1. `npm i express morgan sequelize sequelize-cli pg pg-hstore bcrypt jsonwebtoken dotenv cookie-parser`
     2. `npx gitignore node`
     3. `mkdir src && touch src/server.js .sequelizerc`
