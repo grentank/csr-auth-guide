@@ -1,8 +1,8 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-export default function SignupPage() {
-  const { handleSignup } = useOutletContext();
+export default function SignupPage({ handleSignup }) {
+  // const { handleSignup } = useOutletContext();
   return (
     <form
       onSubmit={(e) => {
