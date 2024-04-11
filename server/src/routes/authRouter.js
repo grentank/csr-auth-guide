@@ -42,25 +42,25 @@ authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(401).json({ message: 'All fields must be present' });
 
-    const user = await User.findOne({
+    const foundUser = await User.findOne({
       where: { email },
     });
 
-    if (!user) return res.status(401).json({ message: 'User not found' });
+    if (!foundUser) return res.status(401).json({ message: 'User not found' });
 
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, foundUser.password);
 
     if (!valid) return res.status(401).json({ message: 'Incorrect password' });
 
-    const plainUser = user.get();
-    delete plainUser.password;
+    const user = foundUser.get();
+    delete user.password;
 
-    const { accessToken, refreshToken } = generateTokens({ user: plainUser });
+    const { accessToken, refreshToken } = generateTokens({ user });
 
     return res
       .cookie('refreshToken', refreshToken, cookiesConfig.refresh)
       .status(200)
-      .json({ accessToken, user: plainUser });
+      .json({ accessToken, user });
   } catch (e) {
     console.log(e);
     return res.sendStatus(500);

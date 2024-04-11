@@ -1,5 +1,5 @@
 import React from 'react';
-import axiosInstance from '../../instance';
+import axiosInstance from '../../service/instance';
 
 export default function LoginPage() {
   const handleSubmit = (e) => {

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import axiosInstance from '../instance';
+import axiosInstance from '../service/instance';
 
-export default function useAxiosInterceptor() {
+export default function useAccessToken() {
   const [accessToken, setAccessToken] = useState('');
 
-  useEffect(() => {
-    axiosInstance.get('/tokens/refresh').then(({ data }) => setAccessToken(data.accessToken));
-  }, []);
+  // useEffect(() => {
+  //   axiosInstance.get('/tokens/refresh').then(({ data }) => setAccessToken(data.accessToken));
+  // }, []);
 
   useEffect(() => {
     // Перехватчик запроса
@@ -22,9 +22,8 @@ export default function useAxiosInterceptor() {
     const responseInterceptor = axiosInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const { status } = error.response;
         const prevRequest = error.config;
-        if (status === 403 && !prevRequest.sent) {
+        if (error.response.status === 403 && !prevRequest.sent) {
           const response = await axios('/api/tokens/refresh');
           const newToken = response.data.accessToken;
           setAccessToken(newToken);
@@ -42,4 +41,6 @@ export default function useAxiosInterceptor() {
       axiosInstance.interceptors.response.eject(responseInterceptor);
     };
   }, [accessToken]);
+
+  return { accessToken, setAccessToken };
 }

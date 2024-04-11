@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function NavBar() {
+export default function NavBar({ user, handleLogout }) {
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand bg-body-tertiary">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
-          Navbar
+          {user ? user.name : 'Guest'}
         </a>
         <button
           className="navbar-toggler"
@@ -26,22 +26,41 @@ export default function NavBar() {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/signup">
-                Signup
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/account">
-                Account
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">
-                Disabled
-              </a>
-            </li>
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/account">
+                    Account
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    aria-disabled="true"
+                    href="/"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLogout();
+                    }}
+                  >
+                    Logout
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/signup">
+                    Signup
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

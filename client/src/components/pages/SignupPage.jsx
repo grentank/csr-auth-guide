@@ -1,15 +1,17 @@
 import React from 'react';
-import axiosInstance from '../../instance';
+import { useOutletContext } from 'react-router-dom';
 
 export default function SignupPage() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const jsonData = Object.fromEntries(formData);
-    axiosInstance.post('/auth/signup', jsonData).then(console.log);
-  };
+  const { handleSignup } = useOutletContext();
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        handleSignup(data);
+      }}
+    >
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">
           Email address
