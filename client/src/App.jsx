@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import useAccessToken from './hooks/useAccessToken';
 import Layout from './components/Layout';
 import HomePage from './components/pages/HomePage';
 import SignupPage from './components/pages/SignupPage';
