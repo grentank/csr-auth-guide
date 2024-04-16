@@ -7,6 +7,10 @@ const axiosInstance = axios.create({
 
 let accessToken = '';
 
+function setAccessToken(token) {
+  accessToken = token;
+}
+
 axiosInstance.interceptors.request.use((config) => {
   if (!config.headers.Authorization) {
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -31,9 +35,5 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-
-function setAccessToken(token) {
-  accessToken = token;
-}
 
 export { setAccessToken };

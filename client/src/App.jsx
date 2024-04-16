@@ -5,7 +5,8 @@ import HomePage from './components/pages/HomePage';
 import SignupPage from './components/pages/SignupPage';
 import AccountPage from './components/pages/AccountPage';
 import axiosInstance, { setAccessToken } from './service/instance';
-import useAccessToken from './hooks/useAccessToken';
+import LoginPage from './components/pages/LoginPage';
+import { loadAccountPosts, loadPosts } from './service/loaders';
 
 function App() {
   const [user, setUser] = useState();
@@ -16,13 +17,20 @@ function App() {
         setUser(res.data.user);
         setAccessToken(res.data.accessToken);
       })
-      .catch(() => {
-        setUser(null);
-      });
+      .catch(() => setUser(null));
   }, []);
 
   const handleSignup = async (data) => {
     const res = await axiosInstance.post('/auth/signup', data);
+    setUser(res.data.user);
+    setAccessToken(res.data.accessToken);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    const res = await axiosInstance.post('/auth/login', data);
     setUser(res.data.user);
     setAccessToken(res.data.accessToken);
   };
@@ -39,11 +47,18 @@ function App() {
       children: [
         { path: '/', element: <HomePage /> },
         { path: '/signup', element: <SignupPage handleSignup={handleSignup} /> },
+        { path: '/login', element: <LoginPage handleLogin={handleLogin} /> },
         {
           path: '/account',
           element: <AccountPage user={user} />,
           errorElement: <h2>Error!</h2>,
-          // loader: () => axiosInstance('/posts?first=1').then((res) => res.data),
+          loader: loadAccountPosts,
+        },
+        {
+          path: '/posts',
+          element: <AccountPage user={user} />,
+          errorElement: <h2>Error!</h2>,
+          loader: loadAccountPosts,
         },
       ],
     },

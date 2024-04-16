@@ -10,5 +10,8 @@ module.exports = {
   },
   rules: {
     'import/no-extraneous-dependencies': 'off',
+    'no-param-reassign': 'off',
+    'react/prop-types': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
   },
 };

@@ -1,15 +1,8 @@
 import React from 'react';
-import axiosInstance from '../../service/instance';
 
-export default function LoginPage() {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const jsonData = Object.fromEntries(formData);
-    axiosInstance.post('/auth/signup', jsonData).then(console.log);
-  };
+export default function LoginPage({ handleLogin }) {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">
           Email address
