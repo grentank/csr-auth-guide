@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import PostItem from '../ui/PostItem';
-import axiosInstance from '../../service/instance';
+import appService from '../../service/instance';
 
 export default function PostsPage({ user }) {
   const loadedPosts = useLoaderData();
-  const [posts, setPosts] = useState(loadedPosts);  
+  const [posts, setPosts] = useState(loadedPosts);
   const deleteHandler = async (postId) => {
-    const res = await axiosInstance.delete(`/posts/${postId}`);
-    if (res.status === 200) {
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
-    }
+    await appService.deletePost(postId);
+    setPosts((prev) => prev.filter((post) => post.id !== postId));
   };
   return (
     <div className="container">

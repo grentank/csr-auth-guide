@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import PostItem from '../ui/PostItem';
-import axiosInstance from '../../service/instance';
+import appService from '../../service/instance';
 
 export default function AccountPage({ user }) {
   const data = useLoaderData();
   const [posts, setPosts] = useState(data);
   const deleteHandler = async (postId) => {
-    const res = await axiosInstance.delete(`/posts/${postId}`);
-    if (res.status === 200) {
-      setPosts((prev) => prev.filter((post) => post.id !== postId));
-    }
+    await appService.deletePost(postId);
+    setPosts((prev) => prev.filter((post) => post.id !== postId));
   };
   const submitHandler = async (formData) => {
-    const res = await axiosInstance.post('/posts', formData);
-    if (res.status === 201) {
-      setPosts((prev) => [...prev, res.data]);
-    }
+    const newPost = await appService.createPost(formData);
+    setPosts((prev) => [newPost, ...prev]);
   };
+  console.log({ account: user });
   return (
     <div className="container">
       <div className="row">
@@ -42,7 +39,7 @@ export default function AccountPage({ user }) {
         </div>
       </div>
       <div className="row">
-        {data.map((post) => (
+        {posts.map((post) => (
           <div className="col-4" key={post.id}>
             <PostItem deleteHandler={deleteHandler} post={post} user={user} />
           </div>

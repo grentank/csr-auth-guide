@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from './ui/NavBar';
-import axiosInstance, { setAccessToken } from '../service/instance';
 
 export default function Layout({ user, handleLogout }) {
   return (
