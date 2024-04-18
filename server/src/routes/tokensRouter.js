@@ -5,12 +5,12 @@ const cookiesConfig = require('../config/cookiesConfig');
 
 const tokensRouter = Router();
 
-tokensRouter.get('/refresh', verifyRefreshToken, async (req, res) => {
+tokensRouter.get('/refresh', verifyRefreshToken, (req, res) => {
   const { accessToken, refreshToken } = generateTokens({
     user: res.locals.user,
   });
   res
-    .cookie('refreshToken', refreshToken, cookiesConfig.refresh)
+    .cookie('refreshToken', refreshToken, cookiesConfig)
     .status(200)
     .json({ accessToken, user: res.locals.user });
 });

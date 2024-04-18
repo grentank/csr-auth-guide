@@ -6,7 +6,9 @@ import SignupPage from './components/pages/SignupPage';
 import AccountPage from './components/pages/AccountPage';
 import axiosInstance, { setAccessToken } from './service/instance';
 import LoginPage from './components/pages/LoginPage';
-import { loadAccountPosts, loadPosts } from './service/loaders';
+import { loadAccountPosts, loadOnePost, loadPosts } from './service/loaders';
+import PostsPage from './components/pages/PostsPage';
+import OnePostPage from './components/pages/OnePostPage';
 
 function App() {
   const [user, setUser] = useState();
@@ -45,7 +47,7 @@ function App() {
     {
       element: <Layout handleLogout={handleLogout} user={user} />,
       children: [
-        { path: '/', element: <HomePage /> },
+        { path: '/', element: <HomePage user={user} /> },
         { path: '/signup', element: <SignupPage handleSignup={handleSignup} /> },
         { path: '/login', element: <LoginPage handleLogin={handleLogin} /> },
         {
@@ -56,9 +58,15 @@ function App() {
         },
         {
           path: '/posts',
-          element: <AccountPage user={user} />,
+          element: <PostsPage user={user} />,
           errorElement: <h2>Error!</h2>,
-          loader: loadAccountPosts,
+          loader: loadPosts,
+        },
+        {
+          path: '/posts/:postId',
+          element: <OnePostPage />,
+          errorElement: <h2>Error!</h2>,
+          loader: loadOnePost,
         },
       ],
     },

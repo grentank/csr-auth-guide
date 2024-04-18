@@ -28,7 +28,7 @@ authRouter.post('/signup', async (req, res) => {
     const { accessToken, refreshToken } = generateTokens({ user });
 
     return res
-      .cookie('refreshToken', refreshToken, cookiesConfig.refresh)
+      .cookie('refreshToken', refreshToken, cookiesConfig)
       .status(200)
       .json({ accessToken, user });
   } catch (e) {
@@ -58,7 +58,7 @@ authRouter.post('/login', async (req, res) => {
     const { accessToken, refreshToken } = generateTokens({ user });
 
     return res
-      .cookie('refreshToken', refreshToken, cookiesConfig.refresh)
+      .cookie('refreshToken', refreshToken, cookiesConfig)
       .status(200)
       .json({ accessToken, user });
   } catch (e) {

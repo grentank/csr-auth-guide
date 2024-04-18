@@ -1,13 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 export default function SignupPage({ handleSignup }) {
+  const navigate = useNavigate();
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        handleSignup(data);
+        handleSignup(data).then(() => navigate('/'));
       }}
     >
       <div className="mb-3">

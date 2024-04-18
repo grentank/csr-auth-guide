@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
-import axiosInstance from '../../service/instance';
 import PostItem from '../ui/PostItem';
+import axiosInstance from '../../service/instance';
 
-export default function AccountPage() {
+export default function AccountPage({ user }) {
   const data = useLoaderData();
   const [posts, setPosts] = useState(data);
-  // useEffect(() => {
-  //   axiosInstance('/posts?second=2', { headers: { second: 'second' } })
-  //     .then((res) => setData(res.data))
-  //     .catch(console.log);
-  // }, []);
+  const deleteHandler = async (postId) => {
+    const res = await axiosInstance.delete(`/posts/${postId}`);
+    if (res.status === 200) {
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+    }
+  };
+  const submitHandler = async (formData) => {
+    const res = await axiosInstance.post('/posts', formData);
+    if (res.status === 201) {
+      setPosts((prev) => [...prev, res.data]);
+    }
+  };
   return (
     <div className="container">
       <div className="row">
@@ -22,11 +29,22 @@ export default function AccountPage() {
         <div className="col-6">
           <p>Total posts: {posts.length}</p>
         </div>
+        <div className="col-6">
+          <button
+            type="button"
+            onClick={() => {
+              const randomPost = { title: `title${Math.random()}`, body: `body${Math.random()}` };
+              submitHandler(randomPost);
+            }}
+          >
+            Add random post
+          </button>
+        </div>
       </div>
       <div className="row">
         {data.map((post) => (
           <div className="col-4" key={post.id}>
-            <PostItem post={post} />
+            <PostItem deleteHandler={deleteHandler} post={post} user={user} />
           </div>
         ))}
       </div>

@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage({ handleLogin }) {
+  const navigate = useNavigate();
+
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={(e) => handleLogin(e).then(() => navigate('/account'))}>
       <div className="mb-3">
         <label htmlFor="exampleInputEmail1" className="form-label">
           Email address

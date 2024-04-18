@@ -1,7 +1,8 @@
+import { useNavigate, Link } from 'react-router-dom';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 export default function NavBar({ user, handleLogout }) {
+  const navigate = useNavigate();
   return (
     <nav className="navbar navbar-expand bg-body-tertiary">
       <div className="container-fluid">
@@ -29,6 +30,11 @@ export default function NavBar({ user, handleLogout }) {
             {user ? (
               <>
                 <li className="nav-item">
+                  <Link className="nav-link" to="/posts">
+                    Posts
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/account">
                     Account
                   </Link>
@@ -40,7 +46,7 @@ export default function NavBar({ user, handleLogout }) {
                     href="/"
                     onClick={(e) => {
                       e.preventDefault();
-                      handleLogout();
+                      handleLogout().then(() => navigate('/'));
                     }}
                   >
                     Logout
